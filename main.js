@@ -20,7 +20,6 @@ const reloadBtn      = document.getElementById('reloadBtn');
 
 // Topbar dynamic elements
 const topbarStats      = document.getElementById('topbarStats');
-const totalRecordsLabel= document.getElementById('totalRecordsLabel');
 const matchStat        = document.getElementById('matchStat');
 const matchLabel       = document.getElementById('matchLabel');
 
@@ -158,8 +157,6 @@ function processData(json, fileName) {
   if (!records.length) { showError('No valid rows found.'); return; }
 
   // Update UI
-  const countStr = records.length.toLocaleString();
-  totalRecordsLabel.textContent  = `${countStr} records loaded`;
   topbarStats.style.display      = 'flex';
   uploadSection.style.display    = 'none';
   trackerSection.style.display   = 'flex';

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Account Lookup — DataTracker</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' rx='6' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23c9a84c'/%3E%3Cstop offset='100%25' stop-color='%23e8c97a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='17' width='28' height='17' rx='2.5' fill='%230a2342'/%3E%3Cpath d='M2 17l16-13 16 13' stroke='%230a2342' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='13' y='24' width='10' height='10' rx='1.5' fill='%230a2342'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="main.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -18,25 +19,21 @@
 
       <!-- Topbar -->
       <header class="topbar">
-        <div class="topbar-left">
-          <div class="breadcrumb">
-            <span class="bc-root">DataTracker</span>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M3.5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="topbar-brand">
+          <div class="topbar-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="9" width="16" height="10" rx="1.5" fill="#0a2342"/>
+              <path d="M1 9l9-7 9 7" stroke="#0a2342" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="7" y="13" width="6" height="6" rx="1" fill="#0a2342"/>
             </svg>
-            <span class="bc-current">Account Lookup</span>
           </div>
-          <h1 class="page-title">Account Lookup</h1>
+          <div class="topbar-title-wrap">
+            <span class="topbar-logo-name">DataTracker</span>
+            <span class="topbar-logo-sub">Account Portal</span>
+          </div>
         </div>
-        <div class="topbar-right" id="topbarStats" style="display:none;">
-          <div class="topbar-stat">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="1.5" y="1.5" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/>
-              <path d="M4 7h6M4 4.5h6M4 9.5h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-            </svg>
-            <span id="totalRecordsLabel">0 records</span>
-          </div>
-          <div class="topbar-divider"></div>
+
+        <div class="topbar-actions" id="topbarStats" style="display:none;">
           <div class="topbar-stat match-stat" id="matchStat" style="display:none;">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/>
@@ -44,7 +41,6 @@
             </svg>
             <span id="matchLabel">0 matches</span>
           </div>
-          <div class="topbar-divider"></div>
           <button class="topbar-change-btn" id="reloadBtn" title="Load a different file">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
               <path d="M1 6.5A5.5 5.5 0 0 1 11.5 4M12 6.5A5.5 5.5 0 0 1 1.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -148,33 +144,33 @@
             <!-- Empty / idle -->
             <div class="ant-empty" id="emptyState">
               <div class="ant-empty-image">
-                <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
-                  <ellipse cx="40" cy="55" rx="28" ry="4" fill="#f0f2f5"/>
-                  <rect x="16" y="8" width="48" height="38" rx="4" fill="#f5f5f5" stroke="#d9d9d9" stroke-width="1.5"/>
-                  <rect x="22" y="16" width="36" height="3" rx="1.5" fill="#d9d9d9"/>
-                  <rect x="22" y="23" width="28" height="3" rx="1.5" fill="#d9d9d9"/>
-                  <rect x="22" y="30" width="20" height="3" rx="1.5" fill="#d9d9d9"/>
-                  <circle cx="54" cy="38" r="12" fill="white" stroke="#d9d9d9" stroke-width="1.5"/>
-                  <circle cx="54" cy="38" r="6" stroke="#1677ff" stroke-width="1.5" opacity="0.5"/>
-                  <path d="M59 43l5 5" stroke="#1677ff" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                <svg width="90" height="70" viewBox="0 0 90 70" fill="none">
+                  <ellipse cx="45" cy="64" rx="30" ry="5" fill="#e8eef7"/>
+                  <rect x="18" y="10" width="54" height="44" rx="5" fill="#f0f4fa" stroke="#dce4f0" stroke-width="1.5"/>
+                  <rect x="26" y="20" width="38" height="3.5" rx="1.75" fill="#c9d5e8"/>
+                  <rect x="26" y="28" width="28" height="3.5" rx="1.75" fill="#c9d5e8"/>
+                  <rect x="26" y="36" width="18" height="3.5" rx="1.75" fill="#c9d5e8"/>
+                  <circle cx="60" cy="46" r="14" fill="white" stroke="#dce4f0" stroke-width="1.5"/>
+                  <circle cx="60" cy="46" r="7" stroke="#0a2342" stroke-width="1.5" opacity="0.35"/>
+                  <path d="M66 52l7 7" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
                 </svg>
               </div>
-              <p class="ant-empty-description">Enter a name to search</p>
-              <p class="ant-empty-hint">Type in the search bar above to look up account records</p>
+              <p class="ant-empty-description">Search for an Account</p>
+              <p class="ant-empty-hint">Enter a name, CH Code, or Account Key to look up records</p>
             </div>
 
             <!-- No results -->
             <div class="ant-empty" id="noResults" style="display:none;">
               <div class="ant-empty-image">
-                <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
-                  <ellipse cx="40" cy="55" rx="28" ry="4" fill="#f0f2f5"/>
-                  <rect x="16" y="8" width="48" height="38" rx="4" fill="#f5f5f5" stroke="#d9d9d9" stroke-width="1.5"/>
-                  <circle cx="54" cy="36" r="14" fill="white" stroke="#ff4d4f" stroke-width="1.5" opacity="0.6"/>
-                  <path d="M49 31l10 10M59 31L49 41" stroke="#ff4d4f" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                <svg width="90" height="70" viewBox="0 0 90 70" fill="none">
+                  <ellipse cx="45" cy="64" rx="30" ry="5" fill="#e8eef7"/>
+                  <rect x="18" y="10" width="54" height="44" rx="5" fill="#f0f4fa" stroke="#dce4f0" stroke-width="1.5"/>
+                  <circle cx="62" cy="44" r="16" fill="white" stroke="#dce4f0" stroke-width="1.5"/>
+                  <path d="M56 38l12 12M68 38L56 50" stroke="#b81c2e" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
                 </svg>
               </div>
-              <p class="ant-empty-description">No records found</p>
-              <p class="ant-empty-hint">No account matched your search. Try a different name.</p>
+              <p class="ant-empty-description">No Records Found</p>
+              <p class="ant-empty-hint">No account matched your search. Try a different query.</p>
             </div>
 
             <!-- Cards list -->
