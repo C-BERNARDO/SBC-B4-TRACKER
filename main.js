@@ -22,8 +22,8 @@ const reloadBtn      = document.getElementById('reloadBtn');
 const topbarStats      = document.getElementById('topbarStats');
 const matchStat        = document.getElementById('matchStat');
 const matchLabel       = document.getElementById('matchLabel');
-const searchingState   = document.getElementById('searchingState');
-const searchingCount   = document.getElementById('searchingCount');
+const fileLoadingOverlay = document.getElementById('fileLoadingOverlay');
+const flFilename         = document.getElementById('flFilename');
 
 let searchTimer = null;
 
@@ -36,10 +36,11 @@ const COLUMN_DEFS = [
   { key: 'cardNumber',  fileCol: 'Contract Number', label: 'Card Number', section: 'identity', valueClass: 'v-card'    },
   { key: 'birthday',   fileCol: 'Birthdate',                       label: 'Birthday',               section: 'identity',     valueClass: 'v-birthday'},
   { key: 'cycle',      fileCol: 'Repaymen Cycle',                 label: 'Cycle',                  section: 'identity',     valueClass: 'v-cycle'  },
-  { key: 'delayDays',  fileCol: 'Delay Days',                      label: 'Delay Days',             section: 'status',       valueClass: 'v-delay'  },
-  { key: 'totalOB',    fileCol: 'Total Outstanding',               label: 'Total OB',               section: 'status',       valueClass: 'v-ob'     },
-  { key: 'stmtMinPay', fileCol: 'Statement Minum Payment',         label: 'Statement Min. Payment', section: 'status',       valueClass: 'v-min'    },
-  { key: 'pastDue',    fileCol: 'Past Due Amount (Base Currency)', label: 'Past Due',               section: 'status',       valueClass: 'v-pastdue'},
+  { key: 'delayDays',     fileCol: 'Delay Days',                        label: 'Delay Days',              section: 'status',       valueClass: 'v-delay'   },
+  { key: 'totalOB',       fileCol: 'Total Outstanding',                 label: 'Total OB',                section: 'status',       valueClass: 'v-ob'      },
+  { key: 'stmtMinPay',    fileCol: 'Statement Minum Payment',           label: 'Statement Min. Payment',  section: 'status',       valueClass: 'v-min'     },
+  { key: 'stmtOverdue',   fileCol: 'Statement Overdue Amount',          label: 'Statement Overdue Amount',section: 'status',       valueClass: 'v-pastdue' },
+  { key: 'pastDue',       fileCol: 'Past Due Amount (Base Currency)',   label: 'Past Due',                section: 'status',       valueClass: 'v-pastdue' },
   { key: 'install01',     fileCol: 'Installment Amount (01)', label: 'Installment (01)', section: 'installments', valueClass: 'v-install'},
   { key: 'installDate01', fileCol: 'Installment Date (01)',   label: 'Date (01)',        section: 'installments', valueClass: 'v-idate'  },
   { key: 'install02',     fileCol: 'Installment Amount (02)', label: 'Installment (02)', section: 'installments', valueClass: 'v-install'},
@@ -91,9 +92,16 @@ reloadBtn.addEventListener('click', () => {
 /* ── File handler ──────────────────────────────────────────── */
 function handleFile(file) {
   const name = file.name.toLowerCase();
-  if (name.endsWith('.csv'))              readCSV(file);
+  // Show loading overlay
+  flFilename.textContent          = file.name;
+  fileLoadingOverlay.style.display = 'flex';
+
+  if (name.endsWith('.csv'))                            readCSV(file);
   else if (name.endsWith('.xlsx') || name.endsWith('.xls')) readXLSX(file);
-  else showError('Unsupported format. Please upload .xlsx or .csv.');
+  else {
+    fileLoadingOverlay.style.display = 'none';
+    showError('Unsupported format. Please upload .xlsx or .csv.');
+  }
 }
 
 function readXLSX(file) {
@@ -104,7 +112,10 @@ function readXLSX(file) {
       const ws   = wb.Sheets[wb.SheetNames[0]];
       const json = XLSX.utils.sheet_to_json(ws, { defval: '' });
       processData(json, file.name);
-    } catch { showError('Could not parse XLSX. Please check the file.'); }
+    } catch {
+      fileLoadingOverlay.style.display = 'none';
+      showError('Could not parse XLSX. Please check the file.');
+    }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -113,7 +124,10 @@ function readCSV(file) {
   const reader = new FileReader();
   reader.onload = e => {
     try { processData(csvToJson(e.target.result), file.name); }
-    catch { showError('Could not parse CSV. Please check the file.'); }
+    catch {
+      fileLoadingOverlay.style.display = 'none';
+      showError('Could not parse CSV. Please check the file.');
+    }
   };
   reader.readAsText(file);
 }
@@ -131,6 +145,7 @@ function csvToJson(text) {
 
 /* ── Process data ──────────────────────────────────────────── */
 function processData(json, fileName) {
+  fileLoadingOverlay.style.display = 'none';
   if (!json.length) { showError('File is empty.'); return; }
 
   const norm       = s => s.toLowerCase().replace(/[\s_\-()"'\u00a0\ufeff\r]/g, '');
@@ -212,7 +227,8 @@ function performSearch(query) {
     safe(r.name).includes(q) ||
     safe(r.chcode).includes(q) ||
     safe(r.accountKey).includes(q) ||
-    safe(r.email).includes(q)
+    safe(r.email).includes(q) ||
+    safe(r.cardNumber).includes(q)
   );
 
   resultsList.innerHTML = '';
@@ -344,7 +360,7 @@ function createCard(record, query, index) {
 
       const empty = !raw;
       // Highlight search query in chcode and accountKey values
-      const highlight = !empty && (def.key === 'chcode' || def.key === 'accountKey' || def.key === 'email');
+      const highlight = !empty && (def.key === 'chcode' || def.key === 'accountKey' || def.key === 'email' || def.key === 'cardNumber');
       const v = empty ? '—' : highlight ? highlightMatch(raw, query) : escapeHtml(raw);
       return `
         <div class="rc-desc-item">
@@ -454,7 +470,7 @@ function fmtDate(d) {
 }
 
 /* ── Amount formatter ──────────────────────────────────────── */
-const AMOUNT_KEYS = new Set(['totalOB', 'stmtMinPay', 'pastDue', 'install01', 'install02', 'install03', 'install04']);
+const AMOUNT_KEYS = new Set(['totalOB', 'stmtMinPay', 'stmtOverdue', 'pastDue', 'install01', 'install02', 'install03', 'install04']);
 
 function formatAmount(raw) {
   if (!raw || !raw.trim()) return '';

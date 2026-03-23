@@ -71,6 +71,51 @@
 
         <!-- ══ UPLOAD SCREEN ══════════════════════════════════ -->
         <div id="uploadSection" class="upload-screen">
+
+          <!-- File processing overlay -->
+          <div class="file-loading-overlay" id="fileLoadingOverlay" style="display:none;">
+            <div class="file-loading-card">
+              <div class="fl-animation">
+                <svg width="90" height="90" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Document base -->
+                  <rect x="18" y="8" width="44" height="56" rx="4" fill="#f0f4fa" stroke="#dce4f0" stroke-width="1.5"/>
+                  <!-- Folded corner -->
+                  <path d="M50 8 L62 20 L50 20 Z" fill="#dce4f0"/>
+                  <path d="M50 8 L62 20 H50 Z" fill="#c8d5e8"/>
+                  <!-- Document lines -->
+                  <rect x="26" y="28" width="28" height="2.5" rx="1.25" fill="#c9d5e8"/>
+                  <rect x="26" y="34" width="22" height="2.5" rx="1.25" fill="#c9d5e8"/>
+                  <rect x="26" y="40" width="18" height="2.5" rx="1.25" fill="#c9d5e8"/>
+                  <!-- Animated scan line -->
+                  <rect class="scan-line" x="18" y="28" width="44" height="3" rx="1.5" fill="url(#scanGrad)" opacity="0.7"/>
+                  <!-- Outer spinner ring -->
+                  <circle class="spin-ring-1" cx="45" cy="62" r="16" stroke="#0033a0" stroke-width="2.5" fill="none"
+                    stroke-dasharray="22 78" stroke-linecap="round"/>
+                  <!-- Inner spinner ring -->
+                  <circle class="spin-ring-2" cx="45" cy="62" r="10" stroke="#8dc63f" stroke-width="2" fill="none"
+                    stroke-dasharray="12 50" stroke-linecap="round"/>
+                  <!-- Hub dot -->
+                  <circle cx="45" cy="62" r="3" fill="#4db8e8"/>
+                  <defs>
+                    <linearGradient id="scanGrad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#0033a0" stop-opacity="0"/>
+                      <stop offset="40%" stop-color="#4db8e8" stop-opacity="1"/>
+                      <stop offset="60%" stop-color="#8dc63f" stop-opacity="1"/>
+                      <stop offset="100%" stop-color="#8dc63f" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <p class="fl-title">Reading File</p>
+              <p class="fl-filename" id="flFilename"></p>
+              <div class="fl-dots">
+                <span class="fl-dot"></span>
+                <span class="fl-dot"></span>
+                <span class="fl-dot"></span>
+              </div>
+              <p class="fl-hint">Please wait while the system processes your data…</p>
+            </div>
+          </div>
           <div class="upload-panel">
             <div class="upload-panel-head">
               <div class="uph-icon">
@@ -142,7 +187,7 @@
                   <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
               </span>
-              <input type="text" id="searchInput" class="ant-input" placeholder="Search by Name, CH Code, Account Key, or Email…" autocomplete="off" />
+              <input type="text" id="searchInput" class="ant-input" placeholder="Search by Name, CH Code, Account Key, Card Number, or Email…" autocomplete="off" />
               <button class="input-suffix-btn" id="clearBtn" style="display:none;" title="Clear search">
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                   <circle cx="6.5" cy="6.5" r="5.5" fill="currentColor" opacity="0.12"/>
